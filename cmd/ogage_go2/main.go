@@ -1,35 +1,4 @@
-# ogage_go2
-Global hotkey listener for Odroid Go Advance
-
-## References
-* [https://github.com/christianhaitian/ogage](https://github.com/christianhaitian/ogage)
-
-## How to build
-```sh
-make
-```
-
-## How to setup development environment
-```sh
-nix develop
-```
-
-### With direnv
-```sh
-direnv allow
-```
-
-### Update `flake.lock`
-```sh
-nix flake update
-```
-
-### Format `flake.nix`
-```sh
-nix fmt flake.nix
-```
-
-# License
+/*
 Copyright (C) 2026 dfkdream
 
 This file is part of ogage_go2.
@@ -39,3 +8,12 @@ ogage_go2 is free software: you can redistribute it and/or modify it under the t
 ogage_go2 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License along with ogage_go2. If not, see https://www.gnu.org/licenses/.
+*/
+
+package main
+
+import "fmt"
+
+func main(){
+	fmt.Println("Hello, world!")
+}
