@@ -3,7 +3,7 @@ Enter your description here.
 
 ## How to build
 ```sh
-go build -o . ./...
+make
 ```
 
 ## How to setup development environment
