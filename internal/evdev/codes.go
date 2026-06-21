@@ -10,10 +10,50 @@ ogage_go2 is distributed in the hope that it will be useful, but WITHOUT ANY WAR
 You should have received a copy of the GNU Affero General Public License along with ogage_go2. If not, see https://www.gnu.org/licenses/.
 */
 
-package main
+package evdev
 
-import "fmt"
+// Button event values
+const (
+	VALUE_RELEASED = iota
+	VALUE_PRESSED
+)
 
-func main(){
-	fmt.Println("Hello, world!")
-}
+// Audio event values
+const (
+	VALUE_INSERTED = iota
+	VALUE_EJECTED
+)
+
+// Power
+const (
+	EVENT_POWER = 116
+)
+
+// Audio
+const (
+	EVENT_HEADPHONE_INSERT = 2
+)
+
+// Joypad
+const (
+	EVENT_TL = 310 + iota
+	EVENT_TR
+	EVENT_TL2
+	EVENT_TR2
+)
+
+const (
+	EVENT_DPAD_UP = 544 + iota
+	EVENT_DPAD_DOWN
+	EVENT_DPAD_LEFT
+	EVENT_DPAD_RIGHT
+)
+
+const (
+	EVENT_TRIGGER_HAPPY1 = 704 + iota
+	EVENT_TRIGGER_HAPPY2
+	EVENT_TRIGGER_HAPPY3
+	EVENT_TRIGGER_HAPPY4
+	EVENT_TRIGGER_HAPPY5
+	EVENT_TRIGGER_HAPPY6
+)

@@ -1,6 +1,15 @@
 # ogage_go2
 Global hotkey listener for Odroid Go Advance
 
+Drop-in replacement of [ArkOS](https://github.com/christianhaitian/arkos)' `ogage` hotkey listener.
+
+## New features
+### Long press
+* Long press the D-Pad buttons to adjust volume/brightness quickly.
+
+### Work in progress
+* Configurable key combinations
+
 ## References
 * [https://github.com/christianhaitian/ogage](https://github.com/christianhaitian/ogage)
 
@@ -8,6 +17,11 @@ Global hotkey listener for Odroid Go Advance
 ```sh
 make
 ```
+
+## Installation
+Copy the `ogage` file into your sdcard's `/usr/local/bin/` directory.
+
+I recommend you to backup the original `ogage`.
 
 ## How to setup development environment
 ```sh

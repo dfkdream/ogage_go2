@@ -1,2 +1,4 @@
-.direnv
-ogage_go2
+/.direnv
+/ogage
+/evtest
+/scratch

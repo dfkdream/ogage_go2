@@ -1,10 +1,10 @@
 all:
-	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags '-extldflags "-static"' -o . ./...
+	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags '-s -w -extldflags "-static"' -o . ./...
 
 run:
-	go run cmd/ogage_go2/main.go
+	go run cmd/ogage/main.go
 
 clean:
-	rm ogage_go2
+	rm ogage evtest
 
 .PHONY: all run clean

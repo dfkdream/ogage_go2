@@ -1,0 +1,11 @@
+InputDevices:
+  - /dev/input/event0 # Power
+  - /dev/input/event1 # Audio
+  - /dev/input/event2 # Joypad
+
+Keys:
+  Hotkey: F5
+  VolumeUp: RIGHT
+  VolumeDown: LEFT
+  BrightnessUp: UP
+  BrightnessDown: DOWN
