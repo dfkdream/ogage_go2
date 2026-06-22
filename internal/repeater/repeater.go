@@ -15,48 +15,45 @@ package repeater
 import "time"
 
 type Repeater struct {
-	f           func()
-	delay       time.Duration
-	interval    time.Duration
-	delayticker *time.Ticker
-	ticker      *time.Ticker
+	f          func()
+	delay      time.Duration
+	interval   time.Duration
+	delayTimer *time.Timer
+	ticker     *time.Ticker
 }
 
 func New(f func(), delay time.Duration, interval time.Duration) *Repeater {
 	ticker := time.NewTicker(interval)
 	ticker.Stop()
 
-	delayticker := time.NewTicker(delay)
-	delayticker.Stop()
+	delayTimer := time.AfterFunc(delay, func() {
+		ticker.Reset(interval)
+		f()
+	})
+	delayTimer.Stop()
 
 	go func() {
 		for {
-			select {
-			case <-delayticker.C:
-				delayticker.Stop()
-				ticker.Reset(interval)
-				f()
-			case <-ticker.C:
-				f()
-			}
+			<-ticker.C
+			f()
 		}
 	}()
 
 	return &Repeater{
-		f:           f,
-		delay:       delay,
-		interval:    interval,
-		delayticker: delayticker,
-		ticker:      ticker,
+		f:          f,
+		delay:      delay,
+		interval:   interval,
+		delayTimer: delayTimer,
+		ticker:     ticker,
 	}
 }
 
 func (r Repeater) Start() {
 	r.f()
-	r.delayticker.Reset(r.delay)
+	r.delayTimer.Reset(r.delay)
 }
 
 func (r Repeater) Stop() {
-	r.delayticker.Stop()
+	r.delayTimer.Stop()
 	r.ticker.Stop()
 }
