@@ -16,22 +16,37 @@ import (
 	"ogage_go2/internal/evdev"
 	"ogage_go2/internal/eventprocessor"
 	"sync/atomic"
+	"time"
 )
 
 var hotkeyPressed atomic.Bool
 
-func powerButtonProcessor(event *evdev.InputEvent) int {
-	if event.Code == evdev.EVENT_POWER && event.Value == evdev.VALUE_PRESSED {
-		if hotkeyPressed.Load() {
-			powerWithHotkey()
-		} else {
-			power()
-		}
+var powerButtonTimer *time.Timer
 
+func powerButtonProcessor(event *evdev.InputEvent) int {
+	if event.Code != evdev.EVENT_POWER {
+		return eventprocessor.HANDLER_OK
+	}
+
+	if hotkeyPressed.Load() {
+		powerWithHotkey()
 		return eventprocessor.HANDLER_ABORT
 	}
 
-	return eventprocessor.HANDLER_OK
+	if powerButtonTimer == nil {
+		powerButtonTimer = time.AfterFunc(
+			conf.PowerButtonLongPressDuration, powerWithHotkey)
+		powerButtonTimer.Stop()
+	}
+
+	if event.Value == evdev.VALUE_PRESSED {
+		powerButtonTimer.Reset(conf.PowerButtonLongPressDuration)
+	} else {
+		powerButtonTimer.Stop()
+		power()
+	}
+
+	return eventprocessor.HANDLER_ABORT
 }
 
 func headphoneProcessor(event *evdev.InputEvent) int {

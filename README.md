@@ -6,6 +6,7 @@ Drop-in replacement of [ArkOS](https://github.com/christianhaitian/arkos)' `ogag
 ## New features
 ### Long press
 * Long press the D-Pad buttons to adjust volume/brightness quickly.
+* Long press power button to shutdown (or suspend, depending on system configuration).
 
 ### Work in progress
 * Configurable key combinations
@@ -20,6 +21,8 @@ make
 
 ## Installation
 Copy the `ogage` file into your sdcard's `/usr/local/bin/` directory.
+
+You might need root privilege.
 
 I recommend you to backup the original `ogage`.
 

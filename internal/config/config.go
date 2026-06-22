@@ -12,12 +12,16 @@ You should have received a copy of the GNU Affero General Public License along w
 
 package config
 
-import "ogage_go2/internal/evdev"
+import (
+	"ogage_go2/internal/evdev"
+	"time"
+)
 
 type Config struct {
-	InputDevices []string
-	Hotkey       uint16
-	Combinations Combinations
+	InputDevices                 []string
+	Hotkey                       uint16
+	Combinations                 Combinations
+	PowerButtonLongPressDuration time.Duration
 }
 
 type Combinations struct {
@@ -42,5 +46,6 @@ func Load(path string) (*Config, error) {
 			VolumeUp:       evdev.EVENT_DPAD_RIGHT,
 			VolumeDown:     evdev.EVENT_DPAD_LEFT,
 		},
+		PowerButtonLongPressDuration: 1 * time.Second,
 	}, nil
 }
