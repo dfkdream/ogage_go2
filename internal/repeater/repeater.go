@@ -22,15 +22,24 @@ type Repeater struct {
 	ticker     *time.Ticker
 }
 
-func New(f func(), delay time.Duration, interval time.Duration) *Repeater {
-	ticker := time.NewTicker(interval)
-	ticker.Stop()
+func New(f func()) *Repeater {
+	//var r Repeater
+	r := Repeater{
+		f:        f,
+		delay:    1 * time.Hour,
+		interval: 1 * time.Hour,
+	}
 
-	delayTimer := time.AfterFunc(delay, func() {
-		ticker.Reset(interval)
+	ticker := time.NewTicker(r.interval)
+	ticker.Stop()
+	r.ticker = ticker
+
+	delayTimer := time.AfterFunc(r.delay, func() {
+		ticker.Reset(r.interval)
 		f()
 	})
 	delayTimer.Stop()
+	r.delayTimer = delayTimer
 
 	go func() {
 		for {
@@ -39,18 +48,14 @@ func New(f func(), delay time.Duration, interval time.Duration) *Repeater {
 		}
 	}()
 
-	return &Repeater{
-		f:          f,
-		delay:      delay,
-		interval:   interval,
-		delayTimer: delayTimer,
-		ticker:     ticker,
-	}
+	return &r
 }
 
-func (r Repeater) Start() {
+func (r *Repeater) Start(delay, interval time.Duration) {
+	r.delay = delay
+	r.interval = interval
+	r.delayTimer.Reset(delay)
 	r.f()
-	r.delayTimer.Reset(r.delay)
 }
 
 func (r Repeater) Stop() {

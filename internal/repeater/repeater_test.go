@@ -23,10 +23,13 @@ func TestNew(t *testing.T) {
 	r := repeater.New(func() {
 		t.Log("Function fired.")
 		i++
-	}, 5*time.Millisecond, 1*time.Millisecond)
+	})
+
+	delay := 5 * time.Millisecond
+	interval := 1 * time.Millisecond
 
 	t.Run("10ms wait", func(t *testing.T) {
-		r.Start()
+		r.Start(delay, interval)
 		time.Sleep(10 * time.Millisecond)
 		r.Stop()
 		time.Sleep(2 * time.Millisecond) // To check if Stop() works.
@@ -39,7 +42,7 @@ func TestNew(t *testing.T) {
 
 	t.Run("2ms wait", func(t *testing.T) {
 		i = 0
-		r.Start()
+		r.Start(delay, interval)
 		time.Sleep(2 * time.Millisecond)
 		r.Stop()
 

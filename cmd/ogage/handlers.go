@@ -89,16 +89,20 @@ func combinationPressProcessor(event *evdev.InputEvent) int {
 
 	switch event.Code {
 	case conf.Combinations.BrightnessUp:
-		brightnessUpRepeater.Start()
+		brightnessUpRepeater.Start(
+			conf.Combinations.Delay, conf.Combinations.Interval)
 
 	case conf.Combinations.BrightnessDown:
-		brightnessDownRepeater.Start()
+		brightnessDownRepeater.Start(
+			conf.Combinations.Delay, conf.Combinations.Interval)
 
 	case conf.Combinations.VolumeUp:
-		volumeUpRepeater.Start()
+		volumeUpRepeater.Start(
+			conf.Combinations.Delay, conf.Combinations.Interval)
 
 	case conf.Combinations.VolumeDown:
-		volumeDownRepeater.Start()
+		volumeDownRepeater.Start(
+			conf.Combinations.Delay, conf.Combinations.Interval)
 
 	default:
 		return eventprocessor.HANDLER_OK

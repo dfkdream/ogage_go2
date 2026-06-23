@@ -16,7 +16,6 @@ import (
 	"fmt"
 	"ogage_go2/internal/repeater"
 	"os/exec"
-	"time"
 )
 
 func execWithLog(name string, arg ...string) {
@@ -30,25 +29,25 @@ func brightnessUp() {
 	execWithLog("brightnessctl", "s", "+2%")
 }
 
-var brightnessUpRepeater = repeater.New(brightnessUp, 500*time.Millisecond, 80*time.Millisecond)
+var brightnessUpRepeater = repeater.New(brightnessUp)
 
 func brightnessDown() {
 	execWithLog("brightnessctl", "s", "2%-")
 }
 
-var brightnessDownRepeater = repeater.New(brightnessDown, 500*time.Millisecond, 80*time.Millisecond)
+var brightnessDownRepeater = repeater.New(brightnessDown)
 
 func volumeUp() {
 	execWithLog("amixer", "-q", "sset", "Playback", "1%+")
 }
 
-var volumeUpRepeater = repeater.New(volumeUp, 500*time.Millisecond, 80*time.Millisecond)
+var volumeUpRepeater = repeater.New(volumeUp)
 
 func volumeDown() {
 	execWithLog("amixer", "-q", "sset", "Playback", "1%-")
 }
 
-var volumeDownRepeater = repeater.New(volumeDown, 500*time.Millisecond, 80*time.Millisecond)
+var volumeDownRepeater = repeater.New(volumeDown)
 
 func audioSpeaker() {
 	execWithLog("amixer", "-q", "sset", "'Playback Path'", "SPK")

@@ -25,6 +25,8 @@ type Config struct {
 }
 
 type Combinations struct {
+	Delay          time.Duration
+	Interval       time.Duration
 	BrightnessUp   uint16
 	BrightnessDown uint16
 	VolumeUp       uint16
@@ -32,6 +34,7 @@ type Combinations struct {
 }
 
 // TODO: Replace mock config with real one
+// TODO: Make repeaters configurable
 func Load(path string) (*Config, error) {
 	return &Config{
 		InputDevices: []string{
@@ -41,6 +44,8 @@ func Load(path string) (*Config, error) {
 		},
 		Hotkey: evdev.EVENT_TRIGGER_HAPPY5,
 		Combinations: Combinations{
+			Delay:          500 * time.Millisecond,
+			Interval:       80 * time.Millisecond,
 			BrightnessUp:   evdev.EVENT_DPAD_UP,
 			BrightnessDown: evdev.EVENT_DPAD_DOWN,
 			VolumeUp:       evdev.EVENT_DPAD_RIGHT,
