@@ -3,9 +3,32 @@ InputDevices:
   - /dev/input/event1 # Audio
   - /dev/input/event2 # Joypad
 
-Keys:
-  Hotkey: F5
-  VolumeUp: RIGHT
-  VolumeDown: LEFT
-  BrightnessUp: UP
-  BrightnessDown: DOWN
+BrightnessFile: /sys/class/backlight/backlight/brightness
+
+Power:
+  LongPressDelay: 1s
+
+Commands:
+  Delay: 500ms
+  Interval: 80ms
+
+JoypadBindings:
+  # D-Pad
+  RIGHT: VOLUME_UP
+  LEFT:  VOLUME_DOWN
+  UP:    BRIGHTNESS_UP
+  DOWN:  BRIGHTNESS_DOWN
+
+  # Triggers
+  TL:  VOLUME_DOWN
+  TR:  VOLUME_UP
+  TL2: BRIGHTNESS_DOWN
+  TR2: BRIGHTNESS_UP
+
+  # Fn Buttons
+  F1: NONE
+  F2: NONE
+  F3: NONE
+  F4: NONE
+  F5: HOTKEY
+  F6: NONE

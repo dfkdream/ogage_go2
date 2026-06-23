@@ -13,6 +13,7 @@ You should have received a copy of the GNU Affero General Public License along w
 package main
 
 import (
+	"ogage_go2/internal/config"
 	"ogage_go2/internal/evdev"
 	"ogage_go2/internal/eventprocessor"
 	"sync/atomic"
@@ -35,12 +36,12 @@ func powerButtonProcessor(event *evdev.InputEvent) int {
 
 	if powerButtonTimer == nil {
 		powerButtonTimer = time.AfterFunc(
-			conf.PowerButtonLongPressDuration, powerWithHotkey)
+			conf.Power.LongPressDuration, powerWithHotkey)
 		powerButtonTimer.Stop()
 	}
 
 	if event.Value == evdev.VALUE_PRESSED {
-		powerButtonTimer.Reset(conf.PowerButtonLongPressDuration)
+		powerButtonTimer.Reset(conf.Power.LongPressDuration)
 	} else {
 		powerButtonTimer.Stop()
 		power()
@@ -63,46 +64,37 @@ func headphoneProcessor(event *evdev.InputEvent) int {
 	return eventprocessor.HANDLER_OK
 }
 
-func hotkeyProcessor(event *evdev.InputEvent) int {
-	if event.Code == conf.Hotkey {
-		if event.Value == evdev.VALUE_PRESSED {
-			hotkeyPressed.Store(true)
-		} else {
-			hotkeyPressed.Store(false)
-
-			brightnessUpRepeater.Stop()
-			brightnessDownRepeater.Stop()
-			volumeUpRepeater.Stop()
-			volumeDownRepeater.Stop()
-		}
-
-		return eventprocessor.HANDLER_ABORT
-	}
-
-	return eventprocessor.HANDLER_OK
-}
-
-func combinationPressProcessor(event *evdev.InputEvent) int {
-	if !(hotkeyPressed.Load() && event.Value == evdev.VALUE_PRESSED) {
+func joypadPressProcessor(event *evdev.InputEvent) int {
+	if event.Value != evdev.VALUE_PRESSED {
 		return eventprocessor.HANDLER_OK
 	}
 
-	switch event.Code {
-	case conf.Combinations.BrightnessUp:
+	binding := conf.JoypadBinding(event.Code)
+	if binding == config.HOTKEY {
+		hotkeyPressed.Store(true)
+		return eventprocessor.HANDLER_ABORT
+	}
+
+	if !hotkeyPressed.Load() {
+		return eventprocessor.HANDLER_OK
+	}
+
+	switch binding {
+	case config.BRIGHTNESS_UP:
 		brightnessUpRepeater.Start(
-			conf.Combinations.Delay, conf.Combinations.Interval)
+			conf.Command.Delay, conf.Command.Interval)
 
-	case conf.Combinations.BrightnessDown:
+	case config.BRIGHTNESS_DOWN:
 		brightnessDownRepeater.Start(
-			conf.Combinations.Delay, conf.Combinations.Interval)
+			conf.Command.Delay, conf.Command.Interval)
 
-	case conf.Combinations.VolumeUp:
+	case config.VOLUME_UP:
 		volumeUpRepeater.Start(
-			conf.Combinations.Delay, conf.Combinations.Interval)
+			conf.Command.Delay, conf.Command.Interval)
 
-	case conf.Combinations.VolumeDown:
+	case config.VOLUME_DOWN:
 		volumeDownRepeater.Start(
-			conf.Combinations.Delay, conf.Combinations.Interval)
+			conf.Command.Delay, conf.Command.Interval)
 
 	default:
 		return eventprocessor.HANDLER_OK
@@ -111,22 +103,38 @@ func combinationPressProcessor(event *evdev.InputEvent) int {
 	return eventprocessor.HANDLER_ABORT
 }
 
-func combinationReleaseProcessor(event *evdev.InputEvent) int {
-	if !(hotkeyPressed.Load() && event.Value == evdev.VALUE_RELEASED) {
+func joypadReleaseProcessor(event *evdev.InputEvent) int {
+	if event.Value != evdev.VALUE_RELEASED {
 		return eventprocessor.HANDLER_OK
 	}
 
-	switch event.Code {
-	case conf.Combinations.BrightnessUp:
+	binding := conf.JoypadBinding(event.Code)
+	if binding == config.HOTKEY {
+		hotkeyPressed.Store(false)
+
+		brightnessUpRepeater.Stop()
+		brightnessDownRepeater.Stop()
+		volumeUpRepeater.Stop()
+		volumeDownRepeater.Stop()
+
+		return eventprocessor.HANDLER_ABORT
+	}
+
+	if !hotkeyPressed.Load() {
+		return eventprocessor.HANDLER_OK
+	}
+
+	switch binding {
+	case config.BRIGHTNESS_UP:
 		brightnessUpRepeater.Stop()
 
-	case conf.Combinations.BrightnessDown:
+	case config.BRIGHTNESS_DOWN:
 		brightnessDownRepeater.Stop()
 
-	case conf.Combinations.VolumeUp:
+	case config.VOLUME_UP:
 		volumeUpRepeater.Stop()
 
-	case conf.Combinations.VolumeDown:
+	case config.VOLUME_DOWN:
 		volumeDownRepeater.Stop()
 
 	default:

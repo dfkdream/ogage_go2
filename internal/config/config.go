@@ -13,25 +13,24 @@ You should have received a copy of the GNU Affero General Public License along w
 package config
 
 import (
-	"ogage_go2/internal/evdev"
 	"time"
 )
 
 type Config struct {
-	InputDevices                 []string
-	BrightnessFile               string
-	Hotkey                       uint16
-	Combinations                 Combinations
-	PowerButtonLongPressDuration time.Duration
+	InputDevices   []string
+	BrightnessFile string
+	Power          Power
+	Command        Command
+	JoypadBindings map[string]string
 }
 
-type Combinations struct {
-	Delay          time.Duration
-	Interval       time.Duration
-	BrightnessUp   uint16
-	BrightnessDown uint16
-	VolumeUp       uint16
-	VolumeDown     uint16
+type Power struct {
+	LongPressDuration time.Duration
+}
+
+type Command struct {
+	Delay    time.Duration
+	Interval time.Duration
 }
 
 const DEFAULT_BRIGHTNESS_FILE = "/sys/class/backlight/backlight/brightness"
@@ -46,15 +45,27 @@ func Load(path string) (*Config, error) {
 			"/dev/input/event2",
 		},
 		BrightnessFile: DEFAULT_BRIGHTNESS_FILE,
-		Hotkey:         evdev.EVENT_TRIGGER_HAPPY5,
-		Combinations: Combinations{
-			Delay:          500 * time.Millisecond,
-			Interval:       80 * time.Millisecond,
-			BrightnessUp:   evdev.EVENT_DPAD_UP,
-			BrightnessDown: evdev.EVENT_DPAD_DOWN,
-			VolumeUp:       evdev.EVENT_DPAD_RIGHT,
-			VolumeDown:     evdev.EVENT_DPAD_LEFT,
+		Power: Power{
+			LongPressDuration: 1 * time.Second,
 		},
-		PowerButtonLongPressDuration: 1 * time.Second,
+		Command: Command{
+			Delay:    500 * time.Millisecond,
+			Interval: 80 * time.Millisecond,
+		},
+		JoypadBindings: map[string]string{
+			"RIGHT": "VOLUME_UP",
+			"LEFT":  "VOLUME_DOWN",
+			"UP":    "BRIGHTNESS_UP",
+			"DOWN":  "BRIGHTNESS_DOWN",
+			"TL":    "VOLUME_DOWN",
+			"TR":    "VOLUME_UP",
+			"TL2":   "BRIGHTNESS_DOWN",
+			"TR2":   "BRIGHTNESS_UP",
+			"F5":    "HOTKEY",
+		},
 	}, nil
+}
+
+func (c Config) JoypadBinding(code uint16) string {
+	return c.JoypadBindings[eventCodeMap[code]]
 }

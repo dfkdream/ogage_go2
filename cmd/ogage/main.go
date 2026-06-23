@@ -31,9 +31,8 @@ func main() {
 	// no need to process headphones here
 	// as it is automatically handled
 	//p.Register(headphoneProcessor)
-	p.Register(hotkeyProcessor)
-	p.Register(combinationPressProcessor)
-	p.Register(combinationReleaseProcessor)
+	p.Register(joypadPressProcessor)
+	p.Register(joypadReleaseProcessor)
 	p.Register(fallbackProcessor)
 
 	for i, inputDevice := range conf.InputDevices {
