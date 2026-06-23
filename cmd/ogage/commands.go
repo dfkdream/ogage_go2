@@ -14,8 +14,12 @@ package main
 
 import (
 	"fmt"
+	"ogage_go2/internal/config"
 	"ogage_go2/internal/repeater"
+	"os"
 	"os/exec"
+	"strconv"
+	"strings"
 )
 
 func execWithLog(name string, arg ...string) {
@@ -25,14 +29,58 @@ func execWithLog(name string, arg ...string) {
 	}
 }
 
+func getBrightness() int {
+	// TODO: Need better way to handle this
+	if conf.BrightnessFile == "" {
+		conf.BrightnessFile = config.DEFAULT_BRIGHTNESS_FILE
+	}
+
+	b, err := os.ReadFile(conf.BrightnessFile)
+	if err != nil {
+		fmt.Println("getBrightness:", err)
+		return 255
+	}
+
+	brightness, err := strconv.Atoi(strings.TrimSpace(string(b)))
+	if err != nil {
+		fmt.Println("getBrightness:", err)
+		return 255
+	}
+
+	return brightness
+}
+
+func setBrightness(brightness int) {
+	// TODO: Need better way to handle this
+	if conf.BrightnessFile == "" {
+		conf.BrightnessFile = config.DEFAULT_BRIGHTNESS_FILE
+	}
+
+	err := os.WriteFile(conf.BrightnessFile, []byte(strconv.Itoa(brightness)), 0644)
+	if err != nil {
+		fmt.Println("setBrightness:", err)
+	}
+}
+
+func updateBrightness(direction int) {
+	updated := getBrightness()
+	if updated < 20 {
+		updated += 1 * direction
+	} else {
+		updated += 5 * direction
+	}
+
+	setBrightness(min(255, max(1, updated)))
+}
+
 func brightnessUp() {
-	execWithLog("brightnessctl", "s", "+2%")
+	updateBrightness(1)
 }
 
 var brightnessUpRepeater = repeater.New(brightnessUp)
 
 func brightnessDown() {
-	execWithLog("brightnessctl", "s", "2%-")
+	updateBrightness(-1)
 }
 
 var brightnessDownRepeater = repeater.New(brightnessDown)

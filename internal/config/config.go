@@ -19,6 +19,7 @@ import (
 
 type Config struct {
 	InputDevices                 []string
+	BrightnessFile               string
 	Hotkey                       uint16
 	Combinations                 Combinations
 	PowerButtonLongPressDuration time.Duration
@@ -33,6 +34,8 @@ type Combinations struct {
 	VolumeDown     uint16
 }
 
+const DEFAULT_BRIGHTNESS_FILE = "/sys/class/backlight/backlight/brightness"
+
 // TODO: Replace mock config with real one
 // TODO: Make repeaters configurable
 func Load(path string) (*Config, error) {
@@ -42,7 +45,8 @@ func Load(path string) (*Config, error) {
 			"/dev/input/event1",
 			"/dev/input/event2",
 		},
-		Hotkey: evdev.EVENT_TRIGGER_HAPPY5,
+		BrightnessFile: DEFAULT_BRIGHTNESS_FILE,
+		Hotkey:         evdev.EVENT_TRIGGER_HAPPY5,
 		Combinations: Combinations{
 			Delay:          500 * time.Millisecond,
 			Interval:       80 * time.Millisecond,
