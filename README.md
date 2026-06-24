@@ -15,7 +15,7 @@ Drop-in replacement of [ArkOS](https://github.com/christianhaitian/arkos)' `ogag
 * Configuration auto-reloading
 
 ### Future plans
-* Block key combination inputs, preventing other programs misinterpretes it.
+* Block key combination inputs, preventing other programs from misinterpreting them.
     * For example, currently, if I adjust the volume or brightness while a game is on, it moves the in-game cursor, which is a bit annoying to me.
 
 ## References
