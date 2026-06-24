@@ -58,6 +58,20 @@ nix flake update
 nix fmt flake.nix
 ```
 
+## If you want to..
+### Add new command
+1. Open [/internal/config/codes.go](/internal/config/codes.go).
+2. Scroll to the bottom.
+3. Add new event constant. e.g. `SOMETHING_NEW = "SOMETHING_NEW"`
+4. Open [/cmd/ogage/commands.go](/cmd/ogage/commands.go).
+5. Write command function. e.g. `func somethingNew() {...}`
+6. Open [/cmd/ogage/handlers.go](/cmd/ogage/handlers.go).
+7. Find appropreate processor function and add binding code.
+    * See `joypadPressProcessor` and `joypadReleaseProcessor`. Most of the commands are processed there.
+
+### Add new button
+See [/internal/evdev/codes.go](/internal/evdev/codes.go) and [/internal/config/codes.go](/internal/config/codes.go).
+
 # License
 Copyright (C) 2026 dfkdream
 
