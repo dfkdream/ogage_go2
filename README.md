@@ -26,6 +26,11 @@ You might need root privilege.
 
 I recommend you to backup the original `ogage`.
 
+## Configurations
+After first run, you can find default configurations in `/etc/ogage/config.yml`.
+
+Or have a look at [/internal/config/config.yml](/internal/config/config.yml).
+
 ## How to setup development environment
 ```sh
 nix develop
