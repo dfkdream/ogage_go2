@@ -13,57 +13,72 @@ You should have received a copy of the GNU Affero General Public License along w
 package config
 
 import (
+	_ "embed"
+	"errors"
+	"os"
+	"path/filepath"
 	"time"
+
+	"github.com/goccy/go-yaml"
 )
 
+//go:embed config.yml
+var defaultConfig []byte
+
 type Config struct {
-	InputDevices   []string
-	BrightnessFile string
-	Power          Power
-	Command        Command
-	JoypadBindings map[string]string
+	InputDevices   []string          `yaml:"InputDevices"`
+	BrightnessFile string            `yaml:"BrightnessFile"`
+	Power          Power             `yaml:"Power"`
+	Command        Command           `yaml:"Command"`
+	JoypadBindings map[string]string `yaml:"JoypadBindings"`
 }
 
 type Power struct {
-	LongPressDuration time.Duration
+	LongPressDuration time.Duration `yaml:"LongPressDuration"`
 }
 
 type Command struct {
-	Delay    time.Duration
-	Interval time.Duration
+	Delay    time.Duration `yaml:"Delay"`
+	Interval time.Duration `yaml:"Interval"`
 }
 
 const DEFAULT_BRIGHTNESS_FILE = "/sys/class/backlight/backlight/brightness"
 
-// TODO: Replace mock config with real one
-// TODO: Make repeaters configurable
 func Load(path string) (*Config, error) {
-	return &Config{
-		InputDevices: []string{
-			"/dev/input/event0",
-			"/dev/input/event1",
-			"/dev/input/event2",
-		},
-		BrightnessFile: DEFAULT_BRIGHTNESS_FILE,
-		Power: Power{
-			LongPressDuration: 1 * time.Second,
-		},
-		Command: Command{
-			Delay:    500 * time.Millisecond,
-			Interval: 80 * time.Millisecond,
-		},
-		JoypadBindings: map[string]string{
-			"RIGHT": "VOLUME_UP",
-			"LEFT":  "VOLUME_DOWN",
-			"UP":    "BRIGHTNESS_UP",
-			"DOWN":  "BRIGHTNESS_DOWN",
-			"TL":    "VOLUME_DOWN",
-			"TR":    "VOLUME_UP",
-			"TL2":   "BRIGHTNESS_DOWN",
-			"TR2":   "BRIGHTNESS_UP",
-			"F5":    "HOTKEY",
-		},
-	}, nil
+	f, err := os.Open(path)
+
+	// Create default config file if not exists
+	if errors.Is(err, os.ErrNotExist) {
+		err = os.MkdirAll(filepath.Dir(path), 0755)
+		if err != nil {
+			return nil, err
+		}
+
+		err = os.WriteFile(path, defaultConfig, 0666)
+		if err != nil {
+			return nil, err
+		}
+
+		// Use FileMode 0666 for easy editing
+		// Chmod is required because of umask.
+		err = os.Chmod(path, 0666)
+		if err != nil {
+			return nil, err
+		}
+
+		f, err = os.Open(path)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer f.Close()
+
+	var c Config
+	err = yaml.NewDecoder(f).Decode(&c)
+
+	return &c, err
 }
 
 func (c Config) JoypadBinding(code uint16) string {

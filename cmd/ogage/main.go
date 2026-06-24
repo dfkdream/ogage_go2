@@ -14,6 +14,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"ogage_go2/internal/config"
 	"ogage_go2/internal/evdev"
 	"ogage_go2/internal/eventprocessor"
@@ -24,7 +25,13 @@ import (
 var conf *config.Config
 
 func main() {
-	conf, _ = config.Load("dummy")
+	var err error
+	conf, err = config.Load("/etc/ogage/config.yml")
+
+	// TODO: Remove this. e.g. load default config if error occurred
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	p := eventprocessor.New()
 	p.Register(powerButtonProcessor)
