@@ -14,12 +14,20 @@ package config_test
 
 import (
 	"ogage_go2/internal/config"
+	"os"
 	"reflect"
 	"testing"
 	"time"
 )
 
 func TestLoad(t *testing.T) {
+	t.Cleanup(func() {
+		err := os.RemoveAll("test_files")
+		if err != nil {
+			t.Fatal(err)
+		}
+	})
+
 	tests := []struct {
 		name string // description of this test case
 		// Named input parameters for target function.
