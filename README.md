@@ -8,8 +8,15 @@ Drop-in replacement of [ArkOS](https://github.com/christianhaitian/arkos)' `ogag
 * Long press the D-Pad buttons to adjust volume/brightness quickly.
 * Long press power button to shutdown (or suspend, depending on system configuration).
 
+### Configurable key combinations
+ Almost every key combinations are configurable. See [Configurations](#configurations) for more.
+
 ### Work in progress
-* Configurable key combinations
+* Configuration auto-reloading
+
+### Future plans
+* Block key combination inputs, preventing other programs misinterpretes it.
+    * For example, currently, if I adjust the volume or brightness while a game is on, it moves the in-game cursor, which is a bit annoying to me.
 
 ## References
 * [https://github.com/christianhaitian/ogage](https://github.com/christianhaitian/ogage)
