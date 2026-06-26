@@ -31,9 +31,8 @@ func TestLoad(t *testing.T) {
 	tests := []struct {
 		name string // description of this test case
 		// Named input parameters for target function.
-		path    string
-		want    *config.Config
-		wantErr bool
+		path string
+		want *config.Config
 	}{
 		{
 			name: "load from file",
@@ -64,22 +63,12 @@ func TestLoad(t *testing.T) {
 					"F5":    "HOTKEY",
 				},
 			},
-			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, gotErr := config.Load(tt.path)
-			if gotErr != nil {
-				if !tt.wantErr {
-					t.Errorf("Load() failed: %v", gotErr)
-				}
-				return
-			}
-			if tt.wantErr {
-				t.Fatal("Load() succeeded unexpectedly")
-			}
-			// TODO: update the condition below to compare got with tt.want.
+			got := config.Load(tt.path)
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Load() = %v, want %v", got, tt.want)
 			}

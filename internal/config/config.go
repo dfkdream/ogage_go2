@@ -15,15 +15,13 @@ package config
 import (
 	_ "embed"
 	"errors"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"time"
 
 	"github.com/goccy/go-yaml"
 )
-
-//go:embed config.yml
-var defaultConfig []byte
 
 type Config struct {
 	InputDevices   []string          `yaml:"InputDevices"`
@@ -42,35 +40,68 @@ type Command struct {
 	Interval time.Duration `yaml:"Interval"`
 }
 
+// TODO: Remove this
 const DEFAULT_BRIGHTNESS_FILE = "/sys/class/backlight/backlight/brightness"
 
-func Load(path string) (*Config, error) {
+var defautConfig = Config{
+	InputDevices: []string{
+		"/dev/input/event0",
+		"/dev/input/event1",
+		"/dev/input/event2",
+	},
+	BrightnessFile: "/sys/class/backlight/backlight/brightness",
+	Power: Power{
+		LongPressDuration: 1 * time.Second,
+	},
+	Command: Command{
+		Delay:    500 * time.Millisecond,
+		Interval: 80 * time.Millisecond,
+	},
+	JoypadBindings: map[string]string{
+		"RIGHT": "VOLUME_UP",
+		"LEFT":  "VOLUME_DOWN",
+		"UP":    "BRIGHTNESS_UP",
+		"DOWN":  "BRIGHTNESS_DOWN",
+		"TL":    "VOLUME_DOWN",
+		"TR":    "VOLUME_UP",
+		"TL2":   "BRIGHTNESS_DOWN",
+		"TR2":   "BRIGHTNESS_UP",
+		"F5":    "HOTKEY",
+	},
+}
+
+func Load(path string) *Config {
 	f, err := os.Open(path)
 
 	// Create default config file if not exists
 	if errors.Is(err, os.ErrNotExist) {
-		err = os.MkdirAll(filepath.Dir(path), 0755)
-		if err != nil {
-			return nil, err
-		}
+		slog.Info(
+			"Config file not found. Creating default one.",
+			"path", path,
+		)
 
-		err = os.WriteFile(path, defaultConfig, 0666)
+		err = createDefaultConfig(path)
 		if err != nil {
-			return nil, err
-		}
+			slog.Error(
+				"Failed to create default config file. Falling back to default config.",
+				"path", path,
+				"err", err,
+			)
 
-		// Use FileMode 0666 for easy editing
-		// Chmod is required because of umask.
-		err = os.Chmod(path, 0666)
-		if err != nil {
-			return nil, err
+			return &defautConfig
 		}
 
 		f, err = os.Open(path)
 	}
 
 	if err != nil {
-		return nil, err
+		slog.Error(
+			"Failed to open config file. Falling back to default config.",
+			"path", path,
+			"err", err,
+		)
+
+		return &defautConfig
 	}
 
 	defer f.Close()
@@ -78,9 +109,43 @@ func Load(path string) (*Config, error) {
 	var c Config
 	err = yaml.NewDecoder(f).Decode(&c)
 
-	return &c, err
+	if err != nil {
+		slog.Error(
+			"Failed to decode config. Falling back to default config.",
+			"path", path,
+			"err", err,
+		)
+
+		return &defautConfig
+	}
+
+	return &c
 }
 
 func (c Config) JoypadBinding(code uint16) string {
 	return c.JoypadBindings[eventCodeMap[code]]
+}
+
+//go:embed config.yml
+var defaultConfigBytes []byte
+
+func createDefaultConfig(path string) error {
+	err := os.MkdirAll(filepath.Dir(path), 0755)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(path, defaultConfigBytes, 0666)
+	if err != nil {
+		return err
+	}
+
+	// Use FileMode 0666 for easy editing
+	// Chmod is required because of umask.
+	err = os.Chmod(path, 0666)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

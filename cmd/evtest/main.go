@@ -22,7 +22,7 @@ import (
 func main() {
 	fmt.Println("Evtest started. Exiting in 20 sec...")
 
-	conf, _ := config.Load("dummy")
+	conf := config.Load("/etc/ogage/config.yml")
 
 	for i, inputDevice := range conf.InputDevices {
 		go func(i int, device string) {
