@@ -21,9 +21,6 @@ import (
 	"sync"
 )
 
-// TODO: Find safer way to store config
-var conf *config.Config
-
 func init() {
 	f, err := os.OpenFile("/var/log/ogage.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
@@ -43,7 +40,7 @@ func init() {
 }
 
 func main() {
-	conf = config.Load("/etc/ogage/config.yml")
+	config.Watch("/etc/ogage/config.yml")
 
 	p := eventprocessor.New()
 	p.Register(powerButtonProcessor)
@@ -54,7 +51,7 @@ func main() {
 	p.Register(joypadReleaseProcessor)
 	p.Register(fallbackProcessor)
 
-	for i, inputDevice := range conf.InputDevices {
+	for i, inputDevice := range config.Get().InputDevices {
 		go func(i int, device string) {
 			dev, err := evdev.Open(device)
 			if err != nil {

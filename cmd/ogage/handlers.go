@@ -34,6 +34,8 @@ func powerButtonProcessor(event *evdev.InputEvent) int {
 		return eventprocessor.HANDLER_ABORT
 	}
 
+	conf := config.Get()
+
 	if powerButtonTimer == nil {
 		powerButtonTimer = time.AfterFunc(
 			conf.Power.LongPressDuration, powerWithHotkey)
@@ -68,6 +70,8 @@ func joypadPressProcessor(event *evdev.InputEvent) int {
 	if event.Value != evdev.VALUE_PRESSED {
 		return eventprocessor.HANDLER_OK
 	}
+
+	conf := config.Get()
 
 	binding := conf.JoypadBinding(event.Code)
 	if binding == config.HOTKEY {
@@ -108,7 +112,7 @@ func joypadReleaseProcessor(event *evdev.InputEvent) int {
 		return eventprocessor.HANDLER_OK
 	}
 
-	binding := conf.JoypadBinding(event.Code)
+	binding := config.Get().JoypadBinding(event.Code)
 	if binding == config.HOTKEY {
 		hotkeyPressed.Store(false)
 

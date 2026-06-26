@@ -9,10 +9,10 @@ Drop-in replacement of [ArkOS](https://github.com/christianhaitian/arkos)' `ogag
 * Long press power button to shutdown (or suspend, depending on system configuration).
 
 ### Configurable key combinations
- Almost every key combinations are configurable. See [Configurations](#configurations) for more.
+Almost every key combinations are configurable. See [Configurations](#configurations) for more.
 
-### Work in progress
-* Configuration auto-reloading
+### Configuration auto-reloading
+Update the configuration and see the changes on the fly. No need to reboot the device.
 
 ### Future plans
 * Block key combination inputs, preventing other programs from misinterpreting them.

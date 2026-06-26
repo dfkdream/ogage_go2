@@ -22,9 +22,9 @@ import (
 func main() {
 	fmt.Println("Evtest started. Exiting in 20 sec...")
 
-	conf := config.Load("/etc/ogage/config.yml")
+	config.Load("/etc/ogage/config.yml")
 
-	for i, inputDevice := range conf.InputDevices {
+	for i, inputDevice := range config.Get().InputDevices {
 		go func(i int, device string) {
 			dev, err := evdev.Open(device)
 			if err != nil {

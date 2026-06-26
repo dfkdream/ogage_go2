@@ -18,6 +18,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"sync/atomic"
 	"time"
 
 	"github.com/goccy/go-yaml"
@@ -70,7 +71,57 @@ var defautConfig = Config{
 	},
 }
 
-func Load(path string) *Config {
+var globalConfig atomic.Pointer[Config]
+
+// Get returns pointer to the loaded config.
+// Do not modify anything on it.
+func Get() *Config {
+	return globalConfig.Load()
+}
+
+func Watch(path string) {
+
+	Load(path)
+
+	// TODO: Make something better
+	go func() {
+		lastChanged := time.Now()
+
+		for {
+			time.Sleep(1 * time.Second)
+
+			info, err := os.Stat(path)
+			if err != nil {
+				slog.Error(
+					"Failed to stat config file. Stopping config watcher.",
+					"path", path,
+					"err", err,
+				)
+
+				break
+			}
+
+			modTime := info.ModTime()
+			// if lastchanged >= modTime
+			if !lastChanged.Before(modTime) {
+				continue
+			}
+
+			slog.Info(
+				"Config file changed. Reloading.",
+				"path", path,
+				"modTime", modTime,
+				"lastChanged", lastChanged,
+			)
+
+			lastChanged = modTime
+
+			Load(path)
+		}
+	}()
+}
+
+func Load(path string) {
 	f, err := os.Open(path)
 
 	// Create default config file if not exists
@@ -88,7 +139,8 @@ func Load(path string) *Config {
 				"err", err,
 			)
 
-			return &defautConfig
+			globalConfig.Store(&defautConfig)
+			return
 		}
 
 		f, err = os.Open(path)
@@ -101,7 +153,8 @@ func Load(path string) *Config {
 			"err", err,
 		)
 
-		return &defautConfig
+		globalConfig.Store(&defautConfig)
+		return
 	}
 
 	defer f.Close()
@@ -116,10 +169,11 @@ func Load(path string) *Config {
 			"err", err,
 		)
 
-		return &defautConfig
+		globalConfig.Store(&defautConfig)
+		return
 	}
 
-	return &c
+	globalConfig.Store(&c)
 }
 
 func (c Config) JoypadBinding(code uint16) string {

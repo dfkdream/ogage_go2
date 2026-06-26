@@ -36,8 +36,11 @@ func execWithLog(name string, arg ...string) {
 
 func getBrightness() int {
 	// TODO: Need better way to handle this
+	conf := config.Get()
+
 	if conf.BrightnessFile == "" {
-		conf.BrightnessFile = config.DEFAULT_BRIGHTNESS_FILE
+		slog.Error("Required config brightness_file is not set. Check config.")
+		return 255
 	}
 
 	b, err := os.ReadFile(conf.BrightnessFile)
@@ -64,9 +67,11 @@ func getBrightness() int {
 }
 
 func setBrightness(brightness int) {
-	// TODO: Need better way to handle this
+	conf := config.Get()
+
 	if conf.BrightnessFile == "" {
-		conf.BrightnessFile = config.DEFAULT_BRIGHTNESS_FILE
+		slog.Error("Required config brightness_file is not set. Check config.")
+		return
 	}
 
 	err := os.WriteFile(conf.BrightnessFile, []byte(strconv.Itoa(brightness)), 0644)
