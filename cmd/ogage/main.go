@@ -13,15 +13,34 @@ You should have received a copy of the GNU Affero General Public License along w
 package main
 
 import (
-	"fmt"
+	"log/slog"
 	"ogage_go2/internal/config"
 	"ogage_go2/internal/evdev"
 	"ogage_go2/internal/eventprocessor"
+	"os"
 	"sync"
 )
 
 // TODO: Find safer way to store config
 var conf *config.Config
+
+func init() {
+	f, err := os.OpenFile("/var/log/ogage.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		slog.Error(
+			"Failed to open log file. Falling back to stdout.",
+			"err", err,
+		)
+
+		return
+	}
+
+	logger := slog.New(slog.NewTextHandler(f, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}))
+
+	slog.SetDefault(logger)
+}
 
 func main() {
 	conf = config.Load("/etc/ogage/config.yml")
@@ -39,14 +58,22 @@ func main() {
 		go func(i int, device string) {
 			dev, err := evdev.Open(device)
 			if err != nil {
-				fmt.Println(err)
+				slog.Error(
+					"Failed to open device file.",
+					"device", device,
+					"err", err,
+				)
 				return
 			}
 
 			for {
 				event, err := dev.ReadOne()
 				if err != nil {
-					fmt.Println(err)
+					slog.Error(
+						"Failed to read event.",
+						"device", device,
+						"err", err,
+					)
 					continue
 				}
 

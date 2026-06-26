@@ -13,7 +13,7 @@ You should have received a copy of the GNU Affero General Public License along w
 package main
 
 import (
-	"fmt"
+	"log/slog"
 	"ogage_go2/internal/config"
 	"ogage_go2/internal/repeater"
 	"os"
@@ -25,7 +25,12 @@ import (
 func execWithLog(name string, arg ...string) {
 	err := exec.Command(name, arg...).Run()
 	if err != nil {
-		fmt.Printf("%s: %s", name, err)
+		slog.Error(
+			"Failed to execute command.",
+			"name", name,
+			"args", arg,
+			"err", err,
+		)
 	}
 }
 
@@ -37,13 +42,21 @@ func getBrightness() int {
 
 	b, err := os.ReadFile(conf.BrightnessFile)
 	if err != nil {
-		fmt.Println("getBrightness:", err)
+		slog.Error(
+			"Failed to read brightness.",
+			"file", conf.BrightnessFile,
+			"err", err,
+		)
 		return 255
 	}
 
 	brightness, err := strconv.Atoi(strings.TrimSpace(string(b)))
 	if err != nil {
-		fmt.Println("getBrightness:", err)
+		slog.Error(
+			"Failed to parse brightness.",
+			"file", conf.BrightnessFile,
+			"err", err,
+		)
 		return 255
 	}
 
@@ -58,7 +71,11 @@ func setBrightness(brightness int) {
 
 	err := os.WriteFile(conf.BrightnessFile, []byte(strconv.Itoa(brightness)), 0644)
 	if err != nil {
-		fmt.Println("setBrightness:", err)
+		slog.Error(
+			"Failed to write brightness.",
+			"file", conf.BrightnessFile,
+			"err", err,
+		)
 	}
 }
 
