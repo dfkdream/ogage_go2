@@ -60,6 +60,8 @@ nix fmt flake.nix
 
 ## If you want to..
 ### Add new command
+TL;DR: See [/internal/config/codes.go](/internal/config/codes.go), [/cmd/ogage/commands.go](/cmd/ogage/commands.go) and [/cmd/ogage/handlers.go](/cmd/ogage/handlers.go).
+
 1. Open [/internal/config/codes.go](/internal/config/codes.go).
 2. Scroll to the bottom.
 3. Add new event constant. e.g. `SOMETHING_NEW = "SOMETHING_NEW"`
