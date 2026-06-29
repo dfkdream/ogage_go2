@@ -92,6 +92,12 @@ func joypadPressProcessor(event *evdev.InputEvent) int {
 		brightnessDownRepeater.Start(
 			conf.Command.Delay, conf.Command.Interval)
 
+	case config.BRIGHTNESS_MIN:
+		brightnessMin()
+
+	case config.BRIGHTNESS_MAX:
+		brightnessMax()
+
 	case config.VOLUME_UP:
 		volumeUpRepeater.Start(
 			conf.Command.Delay, conf.Command.Interval)

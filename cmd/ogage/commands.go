@@ -107,6 +107,14 @@ func brightnessDown() {
 
 var brightnessDownRepeater = repeater.New(brightnessDown)
 
+func brightnessMin() {
+	setBrightness(1)
+}
+
+func brightnessMax() {
+	setBrightness(255)
+}
+
 func volumeUp() {
 	execWithLog("amixer", "-q", "sset", "Playback", "1%+")
 }
