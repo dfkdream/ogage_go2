@@ -16,7 +16,6 @@ import (
 	"log/slog"
 	"ogage_go2/internal/config"
 	"ogage_go2/internal/evdev"
-	"ogage_go2/internal/eventprocessor"
 	"os"
 	"sync"
 )
@@ -42,15 +41,6 @@ func init() {
 func main() {
 	config.Watch("/etc/ogage/config.yml")
 
-	p := eventprocessor.New()
-	p.Register(powerButtonProcessor)
-	// no need to process headphones here
-	// as it is automatically handled
-	//p.Register(headphoneProcessor)
-	p.Register(joypadPressProcessor)
-	p.Register(joypadReleaseProcessor)
-	p.Register(fallbackProcessor)
-
 	for i, inputDevice := range config.Get().InputDevices {
 		go func(i int, device string) {
 			dev, err := evdev.Open(device)
@@ -74,7 +64,7 @@ func main() {
 					continue
 				}
 
-				p.Process(event)
+				handleEvent(event)
 			}
 		}(i, inputDevice)
 	}
