@@ -73,8 +73,8 @@ func joypadPressProcessor(event *evdev.InputEvent) int {
 
 	conf := config.Get()
 
-	binding := conf.JoypadBinding(event.Code)
-	if binding == config.HOTKEY {
+	command := conf.GetCommand(event.Code)
+	if command == config.CmdHotkey {
 		hotkeyPressed.Store(true)
 		return eventprocessor.HANDLER_ABORT
 	}
@@ -83,26 +83,26 @@ func joypadPressProcessor(event *evdev.InputEvent) int {
 		return eventprocessor.HANDLER_OK
 	}
 
-	switch binding {
-	case config.BRIGHTNESS_UP:
+	switch command {
+	case config.CmdBrightnessUp:
 		brightnessUpRepeater.Start(
 			conf.Command.Delay, conf.Command.Interval)
 
-	case config.BRIGHTNESS_DOWN:
+	case config.CmdBrightnessDown:
 		brightnessDownRepeater.Start(
 			conf.Command.Delay, conf.Command.Interval)
 
-	case config.BRIGHTNESS_MIN:
+	case config.CmdBrightnessMin:
 		brightnessMin()
 
-	case config.BRIGHTNESS_MAX:
+	case config.CmdBrightnessMax:
 		brightnessMax()
 
-	case config.VOLUME_UP:
+	case config.CmdVolumeUp:
 		volumeUpRepeater.Start(
 			conf.Command.Delay, conf.Command.Interval)
 
-	case config.VOLUME_DOWN:
+	case config.CmdVolumeDown:
 		volumeDownRepeater.Start(
 			conf.Command.Delay, conf.Command.Interval)
 
@@ -118,8 +118,8 @@ func joypadReleaseProcessor(event *evdev.InputEvent) int {
 		return eventprocessor.HANDLER_OK
 	}
 
-	binding := config.Get().JoypadBinding(event.Code)
-	if binding == config.HOTKEY {
+	command := config.Get().GetCommand(event.Code)
+	if command == config.CmdHotkey {
 		hotkeyPressed.Store(false)
 
 		brightnessUpRepeater.Stop()
@@ -134,17 +134,17 @@ func joypadReleaseProcessor(event *evdev.InputEvent) int {
 		return eventprocessor.HANDLER_OK
 	}
 
-	switch binding {
-	case config.BRIGHTNESS_UP:
+	switch command {
+	case config.CmdBrightnessUp:
 		brightnessUpRepeater.Stop()
 
-	case config.BRIGHTNESS_DOWN:
+	case config.CmdBrightnessDown:
 		brightnessDownRepeater.Stop()
 
-	case config.VOLUME_UP:
+	case config.CmdVolumeUp:
 		volumeUpRepeater.Stop()
 
-	case config.VOLUME_DOWN:
+	case config.CmdVolumeDown:
 		volumeDownRepeater.Stop()
 
 	default:

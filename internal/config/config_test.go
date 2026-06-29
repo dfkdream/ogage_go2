@@ -43,7 +43,7 @@ func TestLoad(t *testing.T) {
 					"/dev/input/event1",
 					"/dev/input/event2",
 				},
-				BrightnessFile: config.DEFAULT_BRIGHTNESS_FILE,
+				BrightnessFile: "/sys/class/backlight/backlight/brightness",
 				Power: config.Power{
 					LongPressDuration: 1 * time.Second,
 				},

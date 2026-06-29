@@ -41,9 +41,6 @@ type Command struct {
 	Interval time.Duration `yaml:"Interval"`
 }
 
-// TODO: Remove this
-const DEFAULT_BRIGHTNESS_FILE = "/sys/class/backlight/backlight/brightness"
-
 var defautConfig = Config{
 	InputDevices: []string{
 		"/dev/input/event0",
@@ -176,8 +173,8 @@ func Load(path string) {
 	globalConfig.Store(&c)
 }
 
-func (c Config) JoypadBinding(code uint16) string {
-	return c.JoypadBindings[eventCodeMap[code]]
+func (c Config) GetCommand(code uint16) string {
+	return c.JoypadBindings[eventCodeAliases[code]]
 }
 
 //go:embed config.yml

@@ -14,7 +14,7 @@ package config
 
 import "ogage_go2/internal/evdev"
 
-var eventCodeMap map[uint16]string = map[uint16]string{
+var eventCodeAliases map[uint16]string = map[uint16]string{
 	// D-Pad
 	evdev.EVENT_DPAD_LEFT:  "LEFT",
 	evdev.EVENT_DPAD_RIGHT: "RIGHT",
@@ -36,12 +36,13 @@ var eventCodeMap map[uint16]string = map[uint16]string{
 	evdev.EVENT_TRIGGER_HAPPY6: "F6",
 }
 
+// Commands
 const (
-	VOLUME_UP       = "VOLUME_UP"
-	VOLUME_DOWN     = "VOLUME_DOWN"
-	BRIGHTNESS_UP   = "BRIGHTNESS_UP"
-	BRIGHTNESS_DOWN = "BRIGHTNESS_DOWN"
-	BRIGHTNESS_MIN  = "BRIGHTNESS_MIN"
-	BRIGHTNESS_MAX  = "BRIGHTNESS_MAX"
-	HOTKEY          = "HOTKEY"
+	CmdVolumeUp       = "VOLUME_UP"
+	CmdVolumeDown     = "VOLUME_DOWN"
+	CmdBrightnessUp   = "BRIGHTNESS_UP"
+	CmdBrightnessDown = "BRIGHTNESS_DOWN"
+	CmdBrightnessMin  = "BRIGHTNESS_MIN"
+	CmdBrightnessMax  = "BRIGHTNESS_MAX"
+	CmdHotkey         = "HOTKEY"
 )
