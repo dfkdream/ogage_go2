@@ -23,13 +23,27 @@ import (
 )
 
 func execWithLog(name string, arg ...string) {
-	err := exec.Command(name, arg...).Run()
+	cmd := exec.Command(name, arg...)
+
+	var builder strings.Builder
+
+	cmd.Stdout = &builder
+	cmd.Stderr = &builder
+
+	slog.Debug(
+		"Executing command.",
+		"name", name,
+		"args", arg,
+	)
+
+	err := cmd.Run()
 	if err != nil {
 		slog.Error(
 			"Failed to execute command.",
 			"name", name,
 			"args", arg,
 			"err", err,
+			"output", builder.String(),
 		)
 	}
 }
