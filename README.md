@@ -3,6 +3,10 @@ Global hotkey listener for Odroid Go Advance
 
 Drop-in replacement of [ArkOS](https://github.com/christianhaitian/arkos)' `ogage` hotkey listener.
 
+See this project on GitHub: [https://github.com/dfkdream/ogage_go2](https://github.com/dfkdream/ogage_go2)
+
+See this project on GitLab: [https://gitlab.com/dfkdream/ogage_go2](https://gitlab.com/dfkdream/ogage_go2)
+
 ## New features
 ### Long press
 * Long press the D-Pad buttons to adjust volume/brightness quickly.
