@@ -19,7 +19,7 @@ Almost every key combinations are configurable. See [Configurations](#configurat
 Update the configuration and see the changes on the fly. No need to reboot the device.
 
 ### Work in progress
-* Easy installation script. Just copy it into your ROMS directory, and install them with only a few button clicks.
+* Easy installation script. Just copy it into your EASYROMS directory, and install it with only a few button clicks.
 
 ### Future plans
 * Block key combination inputs, preventing other programs from misinterpreting them.
