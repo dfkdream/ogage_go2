@@ -30,6 +30,7 @@ type Config struct {
 	Power          Power             `yaml:"Power"`
 	Command        Command           `yaml:"Command"`
 	JoypadBindings map[string]string `yaml:"JoypadBindings"`
+	Experimental   Experimental      `yaml:"Experimental"`
 }
 
 type Power struct {
@@ -39,6 +40,10 @@ type Power struct {
 type Command struct {
 	Delay    time.Duration `yaml:"Delay"`
 	Interval time.Duration `yaml:"Interval"`
+}
+
+type Experimental struct {
+	GrabHotkeyInput bool `yaml:"GrabHotkeyInput"`
 }
 
 var defautConfig = Config{

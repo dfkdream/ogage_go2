@@ -13,10 +13,13 @@ You should have received a copy of the GNU Affero General Public License along w
 package main
 
 import (
+	"log/slog"
 	"ogage_go2/internal/config"
 	"ogage_go2/internal/evdev"
 	"sync/atomic"
 	"time"
+
+	"golang.org/x/sys/unix"
 )
 
 var pressCommands = map[string]func(){
@@ -61,7 +64,7 @@ var hotkeyPressed atomic.Bool
 
 var powerButtonTimer *time.Timer
 
-func handleEvent(event *evdev.InputEvent) {
+func handleEvent(event *evdev.InputEvent, dev *evdev.InputDevice) {
 	// Handle power button events
 	if event.Code == evdev.EVENT_POWER {
 		if hotkeyPressed.Load() {
@@ -95,8 +98,42 @@ func handleEvent(event *evdev.InputEvent) {
 	if cmd == config.CmdHotkey {
 		if event.Value == evdev.VALUE_PRESSED {
 			hotkeyPressed.Store(true)
+
+			if config.Get().Experimental.GrabHotkeyInput {
+				err := dev.Grab()
+				if err != nil {
+					slog.Error(
+						"Failed to grab device.",
+						"err", err,
+						"errno", int(err.(unix.Errno)),
+						"dev", dev.File.Name(),
+					)
+				}
+			}
 		} else {
 			hotkeyPressed.Store(false)
+
+			if config.Get().Experimental.GrabHotkeyInput {
+				err := dev.Release()
+				if err != nil {
+					slog.Error(
+						"Failed to release device.",
+						"err", err,
+						"errno", int(err.(unix.Errno)),
+						"dev", dev.File.Name(),
+					)
+				}
+
+				// TODO: Fix hotkey release issue
+				// Currently, if event grab is enabled,
+				// hotkey will never be released
+				// as release event is grabbed,
+				// which makes emulationstation irresponsible.
+				// This can be temporarily resolved
+				// by removing system_hk from /etc/emulationstation/es_input.cfg.
+				// However this issue should be fixed.
+				// E.g. injecting key release event after release.
+			}
 		}
 		return
 	}

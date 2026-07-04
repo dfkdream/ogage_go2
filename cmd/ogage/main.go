@@ -64,7 +64,7 @@ func main() {
 					continue
 				}
 
-				handleEvent(event)
+				handleEvent(event, dev)
 			}
 		}(i, inputDevice)
 	}

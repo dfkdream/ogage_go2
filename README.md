@@ -18,12 +18,17 @@ Almost every key combinations are configurable. See [Configurations](#configurat
 ### Configuration auto-reloading
 Update the configuration and see the changes on the fly. No need to reboot the device.
 
+### Key combination blocking (Experimental)
+
+> [!WARNING]
+> This feature is experimental, and disabled by default. 
+
+Block key combination inputs, preventing other programs from misinterpreting them.
+
+For example, while a game is on, you can change brightness or volume while not moving the in-game cursor.
+
 ### Work in progress
 * Easy installation script. Just copy it into your EASYROMS directory, and install it with only a few button clicks.
-
-### Future plans
-* Block key combination inputs, preventing other programs from misinterpreting them.
-    * For example, currently, if I adjust the volume or brightness while a game is on, it moves the in-game cursor, which is a bit annoying to me.
 
 ## References
 * [https://github.com/christianhaitian/ogage](https://github.com/christianhaitian/ogage)

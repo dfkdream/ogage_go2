@@ -52,6 +52,8 @@ import (
 	"os"
 	"syscall"
 	"unsafe"
+
+	"golang.org/x/sys/unix"
 )
 
 type InputDevice struct {
@@ -83,6 +85,18 @@ func (dev *InputDevice) ReadOne() (*InputEvent, error) {
 	}
 
 	return &event, nil
+}
+
+// Refer to input.h line 184
+// printf("%#x\n", _IOW('E', 0x90, int));
+const EVIOCGRAB = 0x40044590
+
+func (dev InputDevice) Grab() error {
+	return unix.IoctlSetInt(int(dev.File.Fd()), EVIOCGRAB, 1)
+}
+
+func (dev InputDevice) Release() error {
+	return unix.IoctlSetInt(int(dev.File.Fd()), EVIOCGRAB, 0)
 }
 
 type InputEvent struct {
