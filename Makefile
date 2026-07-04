@@ -4,7 +4,15 @@ all:
 run:
 	go run cmd/ogage/main.go
 
+release: all
+	mkdir ogage_go2
+	cd ogage_go2; \
+	cp ../ogage .; \
+	cp ../scripts/Install.sh .;
+	zip ogage_go2.zip ogage_go2/*
+	rm -r ogage_go2
+
 clean:
 	rm ogage evtest
 
-.PHONY: all run clean
+.PHONY: all run release clean

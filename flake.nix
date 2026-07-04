@@ -14,6 +14,7 @@
             go
 
             # Enter your dependencies here
+            zip
           ];
         };
 
