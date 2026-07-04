@@ -49,7 +49,6 @@ func execWithLog(name string, arg ...string) {
 }
 
 func getBrightness() int {
-	// TODO: Need better way to handle this
 	conf := config.Get()
 
 	if conf.BrightnessFile == "" {

@@ -69,22 +69,20 @@ func handleEvent(event *evdev.InputEvent) {
 			return
 		}
 
+		if powerButtonTimer == nil {
+			powerButtonTimer = time.AfterFunc(
+				config.Get().Power.LongPressDuration,
+				powerWithHotkey,
+			)
+			powerButtonTimer.Stop()
+		}
+
 		if event.Value == evdev.VALUE_PRESSED {
-			// Initialize and start timer
-			if powerButtonTimer == nil {
-				powerButtonTimer = time.AfterFunc(
-					config.Get().Power.LongPressDuration,
-					powerWithHotkey,
-				)
-			} else {
-				powerButtonTimer.Reset(
-					config.Get().Power.LongPressDuration,
-				)
-			}
+			powerButtonTimer.Reset(
+				config.Get().Power.LongPressDuration,
+			)
 		} else {
-			if powerButtonTimer != nil {
-				powerButtonTimer.Stop()
-			}
+			powerButtonTimer.Stop()
 			power()
 		}
 
