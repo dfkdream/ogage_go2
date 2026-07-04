@@ -27,8 +27,17 @@ Block key combination inputs, preventing other programs from misinterpreting the
 
 For example, while a game is on, you can change brightness or volume while not moving the in-game cursor.
 
-### Work in progress
-* Easy installation script. Just copy it into your EASYROMS directory, and install it with only a few button clicks.
+## How to install
+1. Download this file: [ogage_go2.zip](https://github.com/dfkdream/ogage_go2/releases/latest/download/ogage_go2.zip)
+2. Unzip it into your `EASYROMS/tools` directory.
+3. Open configuration/options and move into `Tools > ogage_go2`.
+4. Run `Install`.
+
+## Configurations
+After first run, you can find default configurations in `/etc/ogage/config.yml`.
+
+Or have a look at [/internal/config/config.yml](/internal/config/config.yml).
+
 
 ## References
 * [https://github.com/christianhaitian/ogage](https://github.com/christianhaitian/ogage)
@@ -37,18 +46,6 @@ For example, while a game is on, you can change brightness or volume while not m
 ```sh
 make
 ```
-
-## Installation
-Copy the `ogage` file into your sdcard's `/usr/local/bin/` directory.
-
-You might need root privilege.
-
-I recommend you to backup the original `ogage`.
-
-## Configurations
-After first run, you can find default configurations in `/etc/ogage/config.yml`.
-
-Or have a look at [/internal/config/config.yml](/internal/config/config.yml).
 
 ## How to setup development environment
 ```sh
