@@ -13,6 +13,6 @@ release: all
 	rm -r ogage_go2
 
 clean:
-	rm ogage evtest
+	rm ogage evtest ogage_go2.zip
 
 .PHONY: all run release clean
