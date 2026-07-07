@@ -25,7 +25,7 @@ Update the configuration and see the changes on the fly. No need to reboot the d
 
 Block key combination inputs, preventing other programs from misinterpreting them.
 
-For example, while a game is on, you can change brightness or volume while not moving the in-game cursor.
+For example, while a game is on, you can change brightness or volume without moving the in-game cursor.
 
 ## How to install
 1. Download this file: [ogage_go2.zip](https://github.com/dfkdream/ogage_go2/releases/latest/download/ogage_go2.zip)
@@ -37,7 +37,6 @@ For example, while a game is on, you can change brightness or volume while not m
 After first run, you can find default configurations in `/etc/ogage/config.yml`.
 
 Or have a look at [/internal/config/config.yml](/internal/config/config.yml).
-
 
 ## References
 * [https://github.com/christianhaitian/ogage](https://github.com/christianhaitian/ogage)
@@ -69,16 +68,7 @@ nix fmt flake.nix
 
 ## If you want to..
 ### Add new command
-TL;DR: See [/internal/config/codes.go](/internal/config/codes.go), [/cmd/ogage/commands.go](/cmd/ogage/commands.go) and [/cmd/ogage/handlers.go](/cmd/ogage/handlers.go).
-
-1. Open [/internal/config/codes.go](/internal/config/codes.go).
-2. Scroll to the bottom.
-3. Add new event constant. e.g. `SOMETHING_NEW = "SOMETHING_NEW"`
-4. Open [/cmd/ogage/commands.go](/cmd/ogage/commands.go).
-5. Write command function. e.g. `func somethingNew() {...}`
-6. Open [/cmd/ogage/handlers.go](/cmd/ogage/handlers.go).
-7. Find appropreate processor function and add binding code.
-    * See `joypadPressProcessor` and `joypadReleaseProcessor`. Most of the commands are processed there.
+See [/internal/config/codes.go](/internal/config/codes.go), [/cmd/ogage/commands.go](/cmd/ogage/commands.go) and [/cmd/ogage/handler.go](/cmd/ogage/handler.go).
 
 ### Add new button
 See [/internal/evdev/codes.go](/internal/evdev/codes.go) and [/internal/config/codes.go](/internal/config/codes.go).
