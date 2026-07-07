@@ -8,7 +8,8 @@ release: all
 	mkdir ogage_go2
 	cd ogage_go2; \
 	cp ../ogage .; \
-	cp ../scripts/Install.sh .;
+	cp ../scripts/Install.sh .; \
+	cp ../scripts/Uninstall.sh .;
 	zip ogage_go2.zip ogage_go2/*
 	rm -r ogage_go2
 
