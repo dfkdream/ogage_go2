@@ -128,7 +128,7 @@ func handleEvent(event *evdev.InputEvent, dev *evdev.InputDevice) {
 				// Currently, if event grab is enabled,
 				// hotkey will never be released
 				// as release event is grabbed,
-				// which makes emulationstation irresponsible.
+				// which makes emulationstation unresponsive.
 				// This can be temporarily resolved
 				// by removing system_hk from /etc/emulationstation/es_input.cfg.
 				// However this issue should be fixed.

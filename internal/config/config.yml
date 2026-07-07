@@ -39,6 +39,6 @@ Experimental:
   # Before you uncomment following line:
   # You need to manually remove system_hk from
   # /etc/emulationstation/es_input.cfg.
-  # or it will make emulationstation irresponsible.
+  # or it will make emulationstation unresponsive.
 
   #GrabHotkeyInput: true
