@@ -14,6 +14,12 @@ exec &> /dev/stdout
 
 BASEDIR=$(dirname "$0")
 
+if [ -e $BASEDIR/ogage.bak ]
+then
+    msgbox "ogage.bak exists. It seems like ogage_go2 is already installed. Aborting."
+    exit 1
+fi
+
 sudo systemctl stop oga_events.service
 
 sudo cp /usr/local/bin/ogage $BASEDIR/ogage.bak
@@ -21,4 +27,11 @@ sudo cp $BASEDIR/ogage /usr/local/bin/ogage
 
 sudo systemctl start oga_events.service
 
-msgbox "ogage_go2 is installed successfully. Restart the device if new ogage is not working."
+retval=$?
+
+if [ $retval -eq 0 ]
+then
+    msgbox "ogage_go2 is installed successfully. Restart the device if new ogage is not working."
+else
+    msgbox "Something went wrong. Error code $retval"
+fi
