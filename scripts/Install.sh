@@ -13,8 +13,9 @@
 exec &> /dev/stdout
 
 BASEDIR=$(dirname "$0")
+BACKUP="$HOME/.ogage_go2/ogage.bak"
 
-if [ -e $BASEDIR/ogage.bak ]
+if [ -e $BACKUP ]
 then
     msgbox "ogage.bak exists. It seems like ogage_go2 is already installed. Aborting."
     exit 1
@@ -22,7 +23,8 @@ fi
 
 sudo systemctl stop oga_events.service
 
-sudo cp /usr/local/bin/ogage $BASEDIR/ogage.bak
+mkdir -p $(dirname $BACKUP)
+sudo cp /usr/local/bin/ogage $BACKUP
 sudo cp $BASEDIR/ogage /usr/local/bin/ogage
 
 sudo systemctl start oga_events.service

@@ -13,8 +13,9 @@
 exec &> /dev/stdout
 
 BASEDIR=$(dirname "$0")
+BACKUP="$HOME/.ogage_go2/ogage.bak"
 
-if [ ! -e $BASEDIR/ogage.bak ]
+if [ ! -e $BACKUP ]
 then
     msgbox "ogage.bak not found. Failed to uninstall."
     exit 1
@@ -22,7 +23,7 @@ fi
 
 sudo systemctl stop oga_events.service
 
-sudo mv $BASEDIR/ogage.bak /usr/local/bin/ogage
+sudo mv $BACKUP /usr/local/bin/ogage
 
 sudo systemctl start oga_events.service
 
