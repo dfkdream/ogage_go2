@@ -54,8 +54,6 @@ var pressCommands = map[string]func(){
 var releaseCommands = map[string]func(){
 	config.CmdBrightnessUp:   brightnessUpRepeater.Stop,
 	config.CmdBrightnessDown: brightnessDownRepeater.Stop,
-	config.CmdBrightnessMax:  brightnessMax,
-	config.CmdBrightnessMin:  brightnessMin,
 	config.CmdVolumeUp:       volumeUpRepeater.Stop,
 	config.CmdVolumeDown:     volumeDownRepeater.Stop,
 }
